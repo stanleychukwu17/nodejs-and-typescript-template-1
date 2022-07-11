@@ -1,8 +1,10 @@
 import express from 'express'
-const graphqlHTTP = require('express-graphql')
+require('dotenv').config()
+const {graphqlHTTP} = require('express-graphql')
 
 
 //* creates an express app
+const port = process.env.PORT || 4000
 const app = express();
 app.use(express.json());
 
@@ -15,8 +17,8 @@ let db: any
 connectToDb((err: any) => {
     if (!err) {
         // now we can start listening for events
-        app.listen(4000, () => {
-            console.log('now listening to request from port 4000')
+        app.listen(port, () => {
+            console.log(`now listening to request from port ${port}`)
         })
 
         // updates our database variable
@@ -27,6 +29,6 @@ connectToDb((err: any) => {
 })
 
 
-// app.listen(4000, () => {
-//     console.log('now listening to request from port 4000')
+// app.listen(port, () => {
+//     console.log(`now listening to request from port ${port}`)
 // })
