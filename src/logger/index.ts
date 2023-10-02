@@ -1,6 +1,6 @@
 import fs from 'fs';
 import pino from 'pino'; // pino will be used to log error messages into an error file
-import logger from 'pino' // logger will be used for my development logging of information's
+import logger from 'pino' // logger will be used for my logging, instead of using of console.log()
 import dayjs from 'dayjs'
 
 const args = {
@@ -17,8 +17,8 @@ const args = {
 export const log = logger(args)
 
 
-//*--START-- the below is fpr logging of errors to a file
-// Create a custom destination stream for error logs
+//*--START-- the below is for logging of errors to a file
+// Creates the log folder for storing all of the logging files
 const folderPath = (process.env.NODE_ENV === 'production') ? './.logs' : './.logs';
 if (!fs.existsSync(folderPath)) {
     fs.mkdir(folderPath, () => {})
