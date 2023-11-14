@@ -1,8 +1,17 @@
+//--START-- importation fo assets
 import express from 'express'
 require('dotenv').config()
 const {graphqlHTTP} = require('express-graphql')
+const {ObjectId} = require('mongodb');
+const {connectToDb, getDb} = require('./db')
+
+import pool from './db' // postgres database
+import routes from './routes'
+
+// for the error logger
 import {log, errorLogger} from './logger'
 import { get_the_line_where_this_error_occurred } from './functions/utils'
+//--END--
 
 //* creates an express app
 const port = process.env.PORT || 4000
@@ -10,8 +19,7 @@ const app = express();
 app.use(express.json());
 
 //* import {connectToDb, getDb} from './db'
-const {ObjectId} = require('mongodb');
-const {connectToDb, getDb} = require('./db')
+
 
 //--START-- here is how to use the logger to log both errors and information, we have .info, .error, .warn, and .debug methods
 // errorLogger.info({stanley:'my  name is stanley', lastName: 'my last name is chukwu'})
