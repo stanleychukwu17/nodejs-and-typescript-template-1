@@ -5,9 +5,8 @@ require('dotenv').config()
 const {ObjectId} = require('mongodb');
 const {graphqlHTTP} = require('express-graphql')
 
-import pool from './db' // postgres database
 import routes from './routes'
-const {connectToDb, getDb} = require('./db')
+const {connectToDb, getDb, pool} = require('./db')
 
 import deserializeUser from './middleware/deserializeUser'
 

@@ -1,6 +1,6 @@
 import * as bcrypt from 'bcrypt';
 import { errorLogger, log } from '../logger/';
-import pool from '../db'
+import { pool } from '../db'
 
 import {userRegisterInfo, userLoginInfo} from '../types/users'
 import {show_bad_message, show_good_message, generate_fake_id} from '../functions/utils'
