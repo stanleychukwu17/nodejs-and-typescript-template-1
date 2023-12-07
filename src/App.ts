@@ -3,7 +3,6 @@ import express from 'express'
 import cors from 'cors'
 require('dotenv').config()
 const {ObjectId} = require('mongodb');
-const {graphqlHTTP} = require('express-graphql')
 
 import routes from './routes'
 const {connectToDb, getDb, pool} = require('./db')
@@ -18,6 +17,9 @@ import { get_the_line_where_this_error_occurred } from './functions/utils'
 //* creates an express app
 const port = process.env.PORT || 4000
 const app = express();
+
+
+//* Middlewares
 app.use(express.json());
 app.use(cors({
     origin: process.env.FRONTEND_URL,
@@ -25,8 +27,6 @@ app.use(cors({
     credentials: true, // Allow cookies and HTTP authentication
     optionsSuccessStatus: 204, // Set the status for successful preflight requests
 }))
-
-//* Middlewares
 app.use(deserializeUser); // checks to see if the user is a has a valid accessToken or refreshToken
 
 
