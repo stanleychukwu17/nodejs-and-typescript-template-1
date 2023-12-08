@@ -2,32 +2,46 @@ type Game {
     id: ID!
     title: String!
     date_released: String!
+    reviews: [Review]
 }
 
 type Review {
     id: ID!
     rating: Int!
     content: String!
+    game_id: Int!
+    author_id: Int!
+    game: Game!
+    author: Author!
 }
 
 type Author {
     id: ID!
     name: String!
-    verified: Boolean!
+    username: String!
+    gender: String!
+    reviews: [Review]
 }
-
 
 type Query {
-    game: Game!
-    reviews: [Review]
-    games: [Game]
-    authors: [Author]
+    game (id: Int!): Game!
+    games: [Game!]
+    review (id: Int!): Review!
+    reviews: [Review!]
+    author (id: Int!): Author!
+    authors: [Author!]
 }
 
-input NewGameInput {
-    title: String!
+
+
+input NewReviewInput {
+    gameId: Int!
+    authorId: Int!
+    rating: Int!
+    content: String!
 }
 
 type Mutation {
     createGame(title: String!, date: String!): Game
+    createReview(info: NewReviewInput): Review
 }
