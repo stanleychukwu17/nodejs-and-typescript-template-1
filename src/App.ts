@@ -1,18 +1,28 @@
 //--START-- importation fo assets
-import express from 'express'
+import express, {Express} from 'express'
 import cors from 'cors'
 require('dotenv').config()
 const {ObjectId} = require('mongodb');
-
-import routes from './routes'
 const {connectToDb, getDb, pool} = require('./db')
 
+import gql from "graphql-tag";
+import { ApolloServer } from '@apollo/server';
+import { startStandaloneServer } from '@apollo/server/standalone'
+import { buildSubgraphSchema } from '@apollo/subgraph';
+import { expressMiddleware } from '@apollo/server/express4';
+import { readFileSync } from "fs";
+import path from "path";
+import resolvers from './graphql/resolvers';
+
+import routes from './routes'
 import deserializeUser from './middleware/deserializeUser'
 
 // for the error logger
 import {log, errorLogger} from './logger'
 import { get_the_line_where_this_error_occurred } from './functions/utils'
 //--END--
+
+
 
 //* creates an express app
 const port = process.env.PORT || 4000
@@ -40,6 +50,43 @@ const logError = () => {
     errorLogger.error({'lineNumber': capturedErrorLine}, 'see error message 2')
 }
 // logError()
+
+//* starts the apollo server
+async function startApolloServer (app: Express) {
+    // Get the absolute path to the schema file
+    const schemaFilePath = path.join(__dirname, 'graphql', 'schema.graphql');
+
+    try {
+        // Read the contents of the file synchronously
+        const schemaContent = readFileSync(schemaFilePath, 'utf-8');
+      
+        // Parse the schema using gql
+        const typeDefs = gql(schemaContent);
+      
+        // starts the apollo server
+        const server = new ApolloServer({
+            schema: buildSubgraphSchema({ typeDefs, resolvers }),
+        });
+
+        // Note you must call `start()` on the `ApolloServer` instance before passing the instance to `expressMiddleware`
+        await server.start();
+
+        // adds graphql to the express server
+        app.use('/graphql', expressMiddleware(server) );
+    } catch (err) {
+        console.error('Error reading or parsing the file:', err);
+    }
+
+
+
+
+
+
+
+
+    console.log('graphql server up and running')
+}
+startApolloServer(app)
 
 //* connect to the postgres database and then allow express to receive request
 pool.connect((err: any, client: any, release: () => void) => {
