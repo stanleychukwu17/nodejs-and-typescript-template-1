@@ -3,6 +3,7 @@ import {
     add_a_new_game_to_the_db, get_all_the_games_on_db, get_a_game_using_the_id, get_all_the_authors_on_db, get_a_author_using_the_id, add_a_new_review_to_the_db, get_all_the_reviews_on_db,
     get_a_review_using_the_id
 } from '../controllers/random.controller'
+
 type parent = {
     id: number
 }
@@ -30,7 +31,7 @@ const resolvers = {
         },
 
         async reviews () {
-            return await get_all_the_reviews_on_db()
+            return await get_all_the_reviews_on_db({})
         },
     },
     Mutation: {
@@ -49,8 +50,32 @@ const resolvers = {
     },
 
     Game : {
-        reviews () {
-            
+        // get all the reviews for a game
+        async reviews (parent: parent) {
+            const gameId = parent.id
+            return await get_all_the_reviews_on_db({useOne:'yes', 'useWch':'game_id', useId: gameId})
+        }
+    },
+
+    Author : {
+        // get all the reviews for an author
+        async reviews (parent: parent) {
+            const AuthorId = parent.id
+            return await get_all_the_reviews_on_db({useOne:'yes', 'useWch':'author_id', useId: AuthorId})
+        }
+    },
+
+    Review: {
+        // get the game for which this review was written for
+        async game (parent: parent & {game_id: number}) {
+            const gameId = parent.game_id
+            return await get_a_game_using_the_id(gameId)
+        },
+
+        // get the author who wrote this review
+        async author (parent: parent & {author_id: number}) {
+            const authorId = parent.author_id
+            return await get_a_author_using_the_id(authorId)
         }
     }
 }

@@ -57,7 +57,6 @@ export type newReview = {
 }
 export async function add_a_new_review_to_the_db ({gameId, authorId, rating, content}: newReview) {
     const good_msg = show_good_message()
-    console.log({gameId, authorId, rating, content})
 
     // create a new session and return it
     const qIn = await pool.query("INSERT INTO game_reviews (game_id, author_id, rating, content, date_added) values ($1, $2, $3, $4, now()) RETURNING *", [gameId, authorId, rating, content])
@@ -66,9 +65,21 @@ export async function add_a_new_review_to_the_db ({gameId, authorId, rating, con
 }
 
 // returns all of the games
-export async function get_all_the_reviews_on_db () {
-    const qCheck = await pool.query("SELECT * from game_reviews order by id desc")
-    return qCheck.rows
+type allReviewsProps = {
+    useOne?: 'yes',
+    useWch?: 'game_id' | 'author_id',
+    useId?: number,
+}
+export async function get_all_the_reviews_on_db ({useOne, useWch, useId}: allReviewsProps) {
+    if (useOne === 'yes') {
+        console.log(`SELECT * from game_reviews where ${useWch} = $1 order by id desc`)
+        const qCheck = await pool.query(`SELECT * from game_reviews where ${useWch} = $1 order by id desc`, [useId])
+        return qCheck.rows
+    } else {
+        const qCheck = await pool.query("SELECT * from game_reviews order by id desc")
+        return qCheck.rows
+
+    }
 }
 
 // get a game by using the game id
