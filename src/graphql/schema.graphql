@@ -33,7 +33,6 @@ type Query {
 }
 
 
-
 input NewReviewInput {
     gameId: Int!
     authorId: Int!
