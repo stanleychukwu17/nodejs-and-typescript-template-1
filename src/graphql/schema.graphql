@@ -2,6 +2,8 @@ type Game {
     id: ID!
     title: String!
     date_released: String!
+    total_users_played: Int
+    total_reviews: Int
     reviews: [Review]
 }
 

@@ -1,4 +1,5 @@
 // import { errorLogger, log } from '../logger/';
+import { pick } from 'lodash'
 import { pool } from '../db'
 import {show_bad_message, show_good_message} from '../functions/utils'
 
@@ -23,13 +24,41 @@ export async function add_a_new_game_to_the_db (title: string, dateReleased: str
 // returns all of the games
 export async function get_all_the_games_on_db () {
     const qCheck = await pool.query("SELECT * from games order by id desc")
+    const qResult = qCheck.rows
+
+    if(qResult.length > 0) {
+
+        const sumUp = qResult.map(async (row: {id:number}) => {
+            let q3 = await get_the_total_number_of_users_who_played_this_game(row.id)
+            row = {...row, ...q3}
+            return row
+        })
+    
+        // returns the final result wrapped in a promise
+        const allResult = await Promise.all(sumUp).then(re => { return re })
+        return allResult
+    }
+
     return qCheck.rows
+}
+
+
+// return the total number of users who played a game
+export async function get_the_total_number_of_users_who_played_this_game (game_id: number) {
+    const qs = await pool.query("SELECT count(*) as total_users_played from who_played_game where game_id = $1", [game_id])
+    return qs.rows[0]
 }
 
 // get a game by using the game id
 export async function get_a_game_using_the_id(id:number) {
     const qCheck = await pool.query("SELECT * from games where id = $1 limit 1", [id])
-    return qCheck.rows[0]
+    const num_rows = qCheck.rows.length
+    const game = qCheck.rows[0]
+
+    if (num_rows > 0) {
+
+    }
+    return game
 }
 //*--end--games
 
