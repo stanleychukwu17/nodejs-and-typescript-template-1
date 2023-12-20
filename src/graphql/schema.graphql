@@ -44,5 +44,7 @@ input NewReviewInput {
 
 type Mutation {
     createGame(title: String!, date: String!): Game
+    updateGame(id:ID!, title: String!, date: String!): Game
+    deleteGame(id:ID!): Game
     createReview(info: NewReviewInput): Review
 }

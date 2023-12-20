@@ -21,16 +21,28 @@ export async function add_a_new_game_to_the_db (title: string, dateReleased: str
     return {...good_msg, ...qIn.rows[0]}
 }
 
-// returns all of the games
+// delete a game from the database
+export async function delete_game_from_db (id:number) {
+    const qCheck = await pool.query("DELETE from games where id = $1", [id])
+    return {...show_good_message()}
+}
+
+// updates a game record
+export async function updates_the_record_of_a_game ({id, title, date}: {id:number, title:string, date:string}) {
+    const qIn = await pool.query("UPDATE games SET title = $1, date_released = $2 WHERE id = $3", [title, date, id])
+    return {...show_good_message()}
+}
+
+// game- returns all of the games
 export async function get_all_the_games_on_db () {
     const qCheck = await pool.query("SELECT * from games order by id desc")
     const qResult = qCheck.rows
 
     if(qResult.length > 0) {
-
         const sumUp = qResult.map(async (row: {id:number}) => {
-            let q3 = await get_the_total_number_of_users_who_played_this_game(row.id)
-            row = {...row, ...q3}
+            let q1 = await get_total_number_of_users_who_played_this_game(row.id)
+            let q2 = await get_total_number_of_reviews_for_this_game(row.id)
+            row = {...row, ...q1, ...q2}
             return row
         })
     
@@ -42,14 +54,19 @@ export async function get_all_the_games_on_db () {
     return qCheck.rows
 }
 
-
-// return the total number of users who played a game
-export async function get_the_total_number_of_users_who_played_this_game (game_id: number) {
+// game- return the total number of users who played a game
+export async function get_total_number_of_users_who_played_this_game (game_id: number) {
     const qs = await pool.query("SELECT count(*) as total_users_played from who_played_game where game_id = $1", [game_id])
     return qs.rows[0]
 }
 
-// get a game by using the game id
+// game- return the total number of reviews a game has
+export async function get_total_number_of_reviews_for_this_game (game_id: number) {
+    const qs = await pool.query("SELECT count(*) as total_reviews from game_reviews where game_id = $1", [game_id])
+    return qs.rows[0]
+}
+
+// game- get a game by using the game id
 export async function get_a_game_using_the_id(id:number) {
     const qCheck = await pool.query("SELECT * from games where id = $1 limit 1", [id])
     const num_rows = qCheck.rows.length
