@@ -38,7 +38,7 @@ const resolvers = {
     },
     Mutation: {
         async createGame (_: parent, {title, date}: {title: string, date: string}) {
-            const newGame = await add_a_new_game_to_the_db(title, date)
+            const newGame = await add_a_new_game_to_the_db(title.toLowerCase(), date.toLowerCase())
             return newGame
         },
 
