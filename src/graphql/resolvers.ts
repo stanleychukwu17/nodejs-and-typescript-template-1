@@ -1,3 +1,6 @@
+// const { ApolloError } = require('apollo-server');
+import {ApolloError} from 'apollo-server-errors'
+
 import {
     newReview,
     add_a_new_game_to_the_db, get_all_the_games_on_db, get_a_game_using_the_id, updates_the_record_of_a_game, delete_game_from_db, get_all_the_authors_on_db, get_a_author_using_the_id,
@@ -13,6 +16,10 @@ type parent = {
 const resolvers = {
     Query : {
         async game (_:parent, {id}: {id: number}) {
+            return await get_a_game_using_the_id(id)
+        },
+
+        async gameDts (_:parent, {id}: {id: number}) {
             return await get_a_game_using_the_id(id)
         },
 
@@ -39,7 +46,11 @@ const resolvers = {
     Mutation: {
         async createGame (_: parent, {title, date}: {title: string, date: string}) {
             const newGame = await add_a_new_game_to_the_db(title.toLowerCase(), date.toLowerCase())
-            return newGame
+            if (newGame.msg === 'bad') {
+                throw new ApolloError(newGame.cause, '409');
+            } else {
+                return newGame
+            }
         },
 
         async updateGame (_: parent, {id, title, date}: {id: number, title: string, date: string}) {
@@ -67,6 +78,10 @@ const resolvers = {
             const gameId = parent.id
             return await get_all_the_reviews_on_db({useOne:'yes', 'useWch':'game_id', useId: gameId})
         }
+    },
+
+    GameDts : {
+
     },
 
     Author : {
