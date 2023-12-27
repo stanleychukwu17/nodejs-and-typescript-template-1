@@ -11,6 +11,9 @@ dependencies:
   '@apollo/subgraph':
     specifier: ^2.6.1
     version: 2.6.1(graphql@16.8.1)
+  apollo-server-errors:
+    specifier: ^3.3.1
+    version: 3.3.1(graphql@16.8.1)
   bcrypt:
     specifier: ^5.1.0
     version: 5.1.1
@@ -606,6 +609,16 @@ packages:
     engines: {node: '>=8'}
     dependencies:
       color-convert: 2.0.1
+    dev: false
+
+  /apollo-server-errors@3.3.1(graphql@16.8.1):
+    resolution: {integrity: sha512-xnZJ5QWs6FixHICXHxUfm+ZWqqxrNuPlQ+kj5m6RtEgIpekOPssH/SD9gf2B4HuWV0QozorrygwZnux8POvyPA==}
+    engines: {node: '>=12.0'}
+    deprecated: The `apollo-server-errors` package is part of Apollo Server v2 and v3, which are now deprecated (end-of-life October 22nd 2023 and October 22nd 2024, respectively). This package's functionality is now found in the `@apollo/server` package. See https://www.apollographql.com/docs/apollo-server/previous-versions/ for more details.
+    peerDependencies:
+      graphql: ^15.3.0 || ^16.0.0
+    dependencies:
+      graphql: 16.8.1
     dev: false
 
   /aproba@2.0.0:
