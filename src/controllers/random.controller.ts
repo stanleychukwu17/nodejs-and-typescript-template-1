@@ -71,10 +71,6 @@ export async function get_a_game_using_the_id(id:number) {
     const qCheck = await pool.query("SELECT * from games where id = $1 limit 1", [id])
     const num_rows = qCheck.rows.length
     const game = qCheck.rows[0]
-
-    if (num_rows > 0) {
-
-    }
     return game
 }
 //*--end--games
@@ -118,7 +114,6 @@ type allReviewsProps = {
 }
 export async function get_all_the_reviews_on_db ({useOne, useWch, useId}: allReviewsProps) {
     if (useOne === 'yes') {
-        console.log(`SELECT * from game_reviews where ${useWch} = $1 order by id desc`)
         const qCheck = await pool.query(`SELECT * from game_reviews where ${useWch} = $1 order by id desc`, [useId])
         return qCheck.rows
     } else {

@@ -4,9 +4,16 @@ type Game {
     date_released: String!
     total_users_played: Int
     total_reviews: Int
+}
+type GameDts {
+    id: ID!
+    title: String!
+    date_released: String!
+    total_users_played: Int
+    total_reviews: Int
+    # usersPlayed: [Author]
     reviews: [Review]
 }
-
 type Review {
     id: ID!
     rating: Int!
@@ -16,7 +23,6 @@ type Review {
     game: Game!
     author: Author!
 }
-
 type Author {
     id: ID!
     name: String!
@@ -27,6 +33,7 @@ type Author {
 
 type Query {
     game (id: Int!): Game!
+    gameDts (id: Int!): GameDts!
     games: [Game!]
     review (id: Int!): Review!
     reviews: [Review!]
@@ -46,5 +53,5 @@ type Mutation {
     createGame(title: String!, date: String!): Game
     updateGame(id:ID!, title: String!, date: String!): Game
     deleteGame(id:ID!): Game
-    createReview(info: NewReviewInput): Review
+    createReview(info: NewReviewInput!): Review
 }
