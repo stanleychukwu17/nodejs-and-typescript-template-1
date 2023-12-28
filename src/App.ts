@@ -51,7 +51,7 @@ const logError = () => {
 }
 // logError()
 
-//* starts the apollo server
+//* starts the apollo server - http://localhost:4000/graphql
 async function startApolloServer (app: Express) {
     // Get the absolute path to the schema file
     const schemaFilePath = path.join(__dirname, 'graphql', 'schema.graphql');
